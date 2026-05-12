@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to add cards to your inventory — TCG PowerTools</title>
+<style>
+  :root {
+    --text: #1a1a1a;
+    --text-muted: #555;
+    --accent: #4338ca;
+    --border: #e5e5e5;
+    --bg-soft: #f7f7f9;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--text);
+    line-height: 1.65;
+    margin: 0;
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+  article {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 64px 24px 96px;
+  }
+  .kicker {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 600;
+    margin: 0 0 12px;
+  }
+  h1 {
+    font-size: 36px;
+    line-height: 1.2;
+    margin: 0 0 16px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .lede {
+    font-size: 19px;
+    color: var(--text-muted);
+    margin: 0 0 40px;
+  }
+  h2 {
+    font-size: 24px;
+    margin: 56px 0 16px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+  section:first-of-type h2 { border-top: none; padding-top: 0; margin-top: 32px; }
+  h3 {
+    font-size: 17px;
+    margin: 32px 0 12px;
+    font-weight: 600;
+  }
+  p, ul, ol {
+    margin: 0 0 16px;
+    font-size: 17px;
+  }
+  ol, ul { padding-left: 24px; }
+  li { margin-bottom: 8px; }
+  a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  strong { font-weight: 600; }
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-bottom: 36px;
+    padding: 4px 10px 4px 6px;
+    border-radius: 6px;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .back-link:hover { background: var(--bg-soft); color: var(--accent); }
+  code, kbd {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.9em;
+    background: var(--bg-soft);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+  kbd { padding: 1px 6px; font-weight: 600; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0 24px;
+    font-size: 16px;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  th { background: var(--bg-soft); font-weight: 600; }
+  .callout {
+    background: var(--bg-soft);
+    border-left: 3px solid var(--accent);
+    padding: 16px 20px;
+    margin: 24px 0;
+    border-radius: 4px;
+  }
+  .callout p:last-child { margin-bottom: 0; }
+  .when {
+    font-size: 16px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+  figure { margin: 24px 0; }
+  figure img {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: block;
+  }
+  figcaption {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 8px;
+    text-align: center;
+  }
+  .toc {
+    background: var(--bg-soft);
+    border-radius: 6px;
+    padding: 20px 24px;
+    margin-bottom: 48px;
+  }
+  .toc h3 {
+    margin: 0 0 8px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+  .toc ul { margin: 0; padding-left: 18px; }
+  .toc li { margin-bottom: 4px; }
+  footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 15px;
+  }
+  .video-link {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 40px;
+    background-color: #1a1a1a;
+    background-image: url("https://img.youtube.com/vi/Jv52ZH-PKwc/maxresdefault.jpg");
+    background-size: cover;
+    background-position: center;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+  }
+  .video-link:hover { transform: translateY(-2px); }
+  .video-link::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,0.4) 100%);
+  }
+  .video-link::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 68px;
+    height: 48px;
+    background: rgba(0,0,0,0.75);
+    border-radius: 12px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'><path d='M8 5v14l11-7z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 28px;
+  }
+  .video-link:hover::after { background-color: #cc0000; }
+  .video-caption {
+    position: absolute;
+    bottom: 12px;
+    left: 16px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    z-index: 1;
+  }
+</style>
+</head>
+<body>
+<article>
+  <a href="index.html" class="back-link">← Back to overview</a>
+  <p class="kicker">Getting started</p>
+  <h1>How to add cards to your inventory</h1>
+  <p class="lede">There are four ways to add cards to PowerTools. This guide walks you through each one, so you can pick what fits your situation.</p>
+
+  <div class="video-link" data-video-id="Jv52ZH-PKwc" role="button" tabindex="0" aria-label="Play tutorial video">
+    <span class="video-caption">Watch — 1 min</span>
+  </div>
+  <script>
+    document.querySelectorAll('.video-link').forEach(el => {
+      const load = () => {
+        const id = el.dataset.videoId;
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
+        iframe.title = 'TCG PowerTools tutorial';
+        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+        iframe.setAttribute('allowfullscreen', '');
+        iframe.style.cssText = 'width:100%;aspect-ratio:16/9;border:0;border-radius:6px;display:block;margin-bottom:40px;';
+        el.replaceWith(iframe);
+      };
+      el.addEventListener('click', load);
+      el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); load(); } });
+    });
+  </script>
+
+  <div class="toc">
+    <h3>In this guide</h3>
+    <ul>
+      <li><a href="#pick">Pick the right mode</a></li>
+      <li><a href="#articles">Before you start: articles vs. copies</a></li>
+      <li><a href="#single">Single Card Mode</a></li>
+      <li><a href="#expansion">By Expansion</a></li>
+      <li><a href="#bulk">Bulk</a></li>
+      <li><a href="#import">Import a File</a></li>
+    </ul>
+  </div>
+
+  <section id="pick">
+    <h2>Pick the right mode</h2>
+    <p>From your dashboard, click <strong>Add new articles</strong>. You'll see four ways to add cards — pick the one that matches what you have in front of you.</p>
+    <table>
+      <thead>
+        <tr><th>If you have…</th><th>Use</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>A handful of unsorted singles</td><td><a href="#single">Single Card Mode</a></td></tr>
+        <tr><td>A sorted pile from one expansion</td><td><a href="#expansion">By Expansion</a></td></tr>
+        <tr><td>A full or near-full expansion</td><td><a href="#bulk">Bulk</a></td></tr>
+        <tr><td>Your inventory already in a CSV or Excel file</td><td><a href="#import">Import a File</a></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="articles">
+    <h2>Before you start: articles vs. copies</h2>
+    <p>PowerTools treats <strong>identical cards as one article</strong>. An article has a single sell price and one public comment that's shown on supported platforms.</p>
+    <p>Two cards belong to the same article only if every attribute matches — name, expansion, condition, language, finish, and signed status. Change any one of those, and you get a separate article with its own price and comment.</p>
+    <div class="callout">
+      <p>If you currently use public comments to distinguish copies of the same card (for warehouse location, batch, etc.), use the dedicated <strong>Location</strong> field in PowerTools instead. Location is private and supports per-copy tracking.</p>
+    </div>
+  </section>
+
+  <section id="single">
+    <h2>Single Card Mode</h2>
+    <p class="when"><strong>Use this when:</strong> you have one or more unsorted singles.</p>
+    <figure>
+      <img src="Single%20Card%20Mode.jpeg" alt="Single Card Mode showing a card name search field, language and expansion filters, and a panel of default values for quantity, sell price, condition, language, finish type, signed, location, and comment.">
+      <figcaption>Single Card Mode — search by name, then set the defaults that apply to each card you add.</figcaption>
+    </figure>
+    <ol>
+      <li>From the Add Singles screen, click <strong>Single Card Mode</strong>.</li>
+      <li>Start typing the card name in the <strong>Card Name</strong> field. PowerTools shows matching cards as visual tiles.</li>
+      <li>Use the arrow keys to pick the right printing, then press <kbd>Enter</kbd> to stage it.</li>
+      <li>Use the <a href="#hotkeys">hotkeys</a> to set condition, language, and finish without leaving the keyboard. Press <kbd>Tab</kbd> to move between the Quantity and Comment fields.</li>
+      <li>Press <kbd>Enter</kbd> or <kbd>Space</kbd> to confirm. Press <kbd>C</kbd> to stage another copy with the same settings.</li>
+      <li>When you're done with the batch, click <strong>Save</strong> at the top of the screen.</li>
+    </ol>
+    <h3 id="hotkeys">Hotkey reference</h3>
+    <p>Once a card is staged, an overlay shows the available hotkeys:</p>
+    <table>
+      <thead><tr><th>Action</th><th>Keys</th></tr></thead>
+      <tbody>
+        <tr><td>Condition</td><td><kbd>Q</kbd> MT · <kbd>W</kbd> NM · <kbd>E</kbd> EX · <kbd>R</kbd> GD · <kbd>T</kbd> LP · <kbd>Y</kbd> PL · <kbd>U</kbd> PO</td></tr>
+        <tr><td>Language</td><td><kbd>A</kbd> EN · <kbd>S</kbd> ES · <kbd>D</kbd> DE · <kbd>F</kbd> FR · <kbd>G</kbd> IT · <kbd>H</kbd> RU · <kbd>J</kbd> JP · <kbd>K</kbd> KR · <kbd>L</kbd> PT · <kbd>M</kbd> TW · <kbd>N</kbd> CN</td></tr>
+        <tr><td>Foil</td><td><kbd>I</kbd></td></tr>
+        <tr><td>Create &amp; copy</td><td><kbd>C</kbd></td></tr>
+        <tr><td>Confirm</td><td><kbd>Enter</kbd> or <kbd>Space</kbd></td></tr>
+        <tr><td>Cancel</td><td><kbd>Esc</kbd></td></tr>
+        <tr><td>Switch field</td><td><kbd>Tab</kbd> (Quantity ↔ Comment)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="expansion">
+    <h2>By Expansion</h2>
+    <p class="when"><strong>Use this when:</strong> you have a sorted pile from a single set and want to go down it in order.</p>
+    <figure>
+      <img src="By%20Expansion.jpeg" alt="By Expansion mode showing a sort dropdown, an expansion picker, and the current card staged with a forward arrow to advance to the next card in the set.">
+      <figcaption>By Expansion — PowerTools walks you through the set card by card.</figcaption>
+    </figure>
+    <ol>
+      <li>From the Add Singles screen, click <strong>By Expansion</strong>.</li>
+      <li>Pick a sort order under <strong>Sort expansion by</strong> — by rarity and collector number, by collector number, by English name, or by rarity and English name. This sets the order you'll move through the cards.</li>
+      <li>Pick the set under <strong>Expansion</strong>.</li>
+      <li>PowerTools shows the first card. Set the quantity, condition, language, and any other attributes — use the <a href="#hotkeys">hotkeys</a> for speed, and press <kbd>Tab</kbd> to move between the Quantity and Comment fields.</li>
+      <li>Press <kbd>Space</kbd> (or <kbd>Enter</kbd>) to confirm and advance to the next card.</li>
+      <li>To jump directly to a specific card, use the collector-number dropdown at the top of the panel.</li>
+      <li>Click <strong>Save</strong> when you're done.</li>
+    </ol>
+  </section>
+
+  <section id="bulk">
+    <h2>Bulk</h2>
+    <p class="when"><strong>Use this when:</strong> you've got a full or near-full set and want one (or N) of every card as a starting baseline.</p>
+    <figure>
+      <img src="Bulk.jpeg" alt="Bulk mode showing the rarity breakdown for an expansion and per-rarity quantity input fields.">
+      <figcaption>Bulk — add one of every card in a set by rarity, then adjust outliers afterward.</figcaption>
+    </figure>
+    <ol>
+      <li>From the Add Singles screen, click <strong>Bulk</strong>.</li>
+      <li>Pick the set under <strong>Expansion</strong>. PowerTools shows the rarity breakdown: total cards, plus counts per category (Common, Uncommon, Rare, Mythic, etc.).</li>
+      <li>Enter how many of each rarity you have. For example, entering <code>1</code> in Common, Uncommon, and Rare adds one of every common, uncommon, and rare in the set.</li>
+      <li>Set the defaults (condition, language, finish, location, comment) — they'll apply to every card in the batch.</li>
+      <li>Click <strong>Add X articles</strong>. The workspace populates with the full batch as individual article cards, which you can then edit or delete one by one.</li>
+      <li>Click <strong>Save</strong> when you're done.</li>
+    </ol>
+  </section>
+
+  <section id="import">
+    <h2>Import a File</h2>
+    <p class="when"><strong>Use this when:</strong> your inventory already lives in a CSV or Excel file (for example, an export from Cardmarket).</p>
+    <figure>
+      <img src="Import%20a%20file.jpeg" alt="Import a File modal with a drag-and-drop zone and a button to download the example PowerTools CSV template.">
+      <figcaption>Import a File — drag in a CSV, and PowerTools maps it to articles automatically.</figcaption>
+    </figure>
+    <ol>
+      <li>From the Add Singles screen, click <strong>Import a File</strong>.</li>
+      <li>Click <strong>Get example CSV file (PowerTools format)</strong> in the top-right to download the template.</li>
+      <li>Fill in the template with your inventory. See the column reference below.</li>
+      <li>Drag your file into the drop zone, or click to browse.</li>
+      <li>PowerTools imports the file and stages every row as an article in the workspace.</li>
+      <li>Review the staged articles, then click <strong>Save</strong> to push them to your channels.</li>
+    </ol>
+    <h3>CSV column reference</h3>
+    <table>
+      <thead><tr><th>Column</th><th>What goes in it</th></tr></thead>
+      <tbody>
+        <tr><td><code>cardmarketId</code></td><td>The Cardmarket product ID.</td></tr>
+        <tr><td><code>quantity</code></td><td>Number of copies.</td></tr>
+        <tr><td><code>name</code></td><td>Card name.</td></tr>
+        <tr><td><code>set</code></td><td>Expansion name (e.g. <em>Gatecrash</em>).</td></tr>
+        <tr><td><code>condition</code></td><td>Condition code: MT, NM, EX, GD, LP, PL, PO.</td></tr>
+        <tr><td><code>language</code></td><td>Language (e.g. <em>English</em>).</td></tr>
+        <tr><td><code>isSigned</code></td><td><code>TRUE</code> or <code>FALSE</code>.</td></tr>
+        <tr><td><code>price</code></td><td>Sell price (whole number).</td></tr>
+        <tr><td><code>comment</code></td><td>Public comment (optional).</td></tr>
+        <tr><td><code>finishType</code></td><td><em>Regular</em>, <em>Foil</em>, etc.</td></tr>
+      </tbody>
+    </table>
+    <div class="callout">
+      <p><strong>Duplicate rows:</strong> If your CSV has multiple rows for identical cards (all attributes match), PowerTools combines them into one article. Quantities stack, and the last price and comment in reading order win.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>Once your cards are added, click <strong>Save</strong> to push them to your connected channels (Cardmarket, Cardtrader, Shopify). Each mode has its own deep-dive guide — links coming soon.</p>
+  </footer>
+</article>
+</body>
+</html>

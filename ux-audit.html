@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UX Writing Audit — TCG PowerTools</title>
+<style>
+  :root {
+    --text: #1a1a1a;
+    --text-muted: #555;
+    --text-soft: #777;
+    --accent: #4338ca;
+    --border: #e5e5e5;
+    --bg-soft: #f7f7f9;
+    --before: #b45309;
+    --before-bg: #fef7e6;
+    --after: #15803d;
+    --after-bg: #ecfdf5;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--text);
+    line-height: 1.65;
+    margin: 0;
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+  article {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 64px 24px 96px;
+  }
+  .kicker {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 600;
+    margin: 0 0 12px;
+  }
+  h1 {
+    font-size: 38px;
+    line-height: 1.2;
+    margin: 0 0 16px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    max-width: 720px;
+  }
+  .lede {
+    font-size: 19px;
+    color: var(--text-muted);
+    margin: 0 0 56px;
+    max-width: 720px;
+  }
+  h2 {
+    font-size: 26px;
+    margin: 72px 0 8px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
+  section:first-of-type h2 { border-top: none; padding-top: 0; margin-top: 32px; }
+  h3 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0 0 12px;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+  h4 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0 0 16px;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+  p, ul, ol { margin: 0 0 16px; font-size: 17px; max-width: 720px; }
+  ol.principles, ol.changes-list { padding-left: 22px; }
+  ol.principles li { margin-bottom: 12px; }
+  .context-line {
+    font-size: 16px;
+    color: var(--text-soft);
+    margin: 0 0 28px;
+  }
+  a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+  strong { font-weight: 600; }
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-bottom: 36px;
+    padding: 4px 10px 4px 6px;
+    border-radius: 6px;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .back-link:hover { background: var(--bg-soft); color: var(--accent); }
+
+  /* compare grid */
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 0 0 32px;
+  }
+  @media (max-width: 820px) {
+    .compare { grid-template-columns: 1fr; }
+  }
+  .col-before h3 { color: var(--before); }
+  .col-after h3 { color: var(--after); }
+
+  /* mockup card */
+  .mockup {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  .col-before .mockup { border-top: 3px solid var(--before); }
+  .col-after .mockup { border-top: 3px solid var(--after); }
+
+  /* mockup internal blocks */
+  .mock-greeting {
+    font-size: 17px;
+    font-weight: 600;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 14px;
+  }
+  .mock-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .mock-stat {
+    background: var(--bg-soft);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .mock-stat .big {
+    display: block;
+    font-size: 15px;
+    color: var(--text);
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .mock-section-heading {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 14px 0 10px;
+  }
+  .mock-card {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+  }
+  .mock-card-title {
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 4px;
+    font-size: 13px;
+  }
+  .mock-card-body {
+    color: var(--text-muted);
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .mock-form-title {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .mock-field {
+    margin-bottom: 12px;
+  }
+  .mock-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 2px;
+  }
+  .mock-input {
+    border-bottom: 1px solid var(--border);
+    padding: 4px 0;
+    font-size: 13px;
+    color: var(--text);
+    min-height: 22px;
+  }
+  .mock-input.placeholder { color: #aaa; font-style: italic; }
+  .mock-helper {
+    font-size: 11px;
+    color: var(--text-soft);
+    margin-top: 4px;
+  }
+  .mock-helper.warn { color: var(--before); }
+  .mock-section-label {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 18px 0 10px;
+  }
+  .mock-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 12px;
+    font-size: 11px;
+  }
+  .mock-tool {
+    padding: 3px 8px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .mock-tool.save {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+  .mock-stats-line {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+  .mock-tab {
+    display: inline-block;
+    padding: 4px 10px;
+    border-bottom: 2px solid var(--accent);
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .mock-card-tile {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+  .mock-card-tile .name {
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .mock-card-tile .meta {
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    font-size: 11px;
+  }
+  .badge {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 600;
+    margin-right: 4px;
+  }
+  .badge.nm { background: #d1fae5; color: #065f46; }
+  .badge.gd { background: #fef3c7; color: #92400e; }
+  .icon-stub {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #e5e5e5;
+    text-align: center;
+    line-height: 14px;
+    font-size: 9px;
+    margin-right: 4px;
+    cursor: help;
+  }
+  .icon-stub.star { background: #fde68a; color: #92400e; }
+  .icon-stub.alt { background: #ede9fe; color: #5b21b6; }
+
+  .empty-state {
+    border: 1px dashed var(--border);
+    border-radius: 6px;
+    padding: 24px 12px;
+    text-align: center;
+    color: var(--text-soft);
+    font-size: 12px;
+    margin: 14px 0;
+  }
+
+  /* change list */
+  .changes {
+    background: var(--bg-soft);
+    border-radius: 10px;
+    padding: 24px 28px;
+    margin-top: 8px;
+  }
+  ol.changes-list {
+    margin: 0;
+    counter-reset: change;
+    list-style: none;
+    padding-left: 0;
+  }
+  ol.changes-list li {
+    counter-increment: change;
+    margin-bottom: 18px;
+    padding-left: 36px;
+    position: relative;
+    font-size: 16px;
+  }
+  ol.changes-list li:last-child { margin-bottom: 0; }
+  ol.changes-list li::before {
+    content: counter(change);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 24px;
+    height: 24px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 24px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  ol.changes-list li strong { display: block; margin-bottom: 4px; }
+  ol.changes-list li em { font-style: normal; color: var(--text-muted); }
+
+  footer {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 15px;
+  }
+</style>
+</head>
+<body>
+<article>
+  <a href="index.html" class="back-link">← Back to overview</a>
+  <p class="kicker">UX Writing Audit · PowerTools v2</p>
+  <h1>Helping TCG PowerTools sound as confident as it works</h1>
+  <p class="lede">A look at four high-traffic screens, with proposed copy changes that make the interface easier to scan, easier to trust, and easier to act on. Each rewrite is grounded in the audience profile already established by the team — not a personal style preference.</p>
+
+  <section>
+    <h2>Principles applied</h2>
+    <p>The team's own audience profile gives the audit its working principles. TCG sellers are described as <em>not highly tech-savvy, time-poor, and goal-oriented — they care about how to do something, not why it works</em>. From that, four rules:</p>
+    <ol class="principles">
+      <li><strong>Lead with the action.</strong> Show what to do; the why can follow, never lead.</li>
+      <li><strong>Speak the user's language.</strong> Avoid internal abbreviations and developer notation (<em>Acc.</em>, <em>cn</em>, <em>(stock&nbsp;-&nbsp;sold)</em>) unless they're already common in the TCG world.</li>
+      <li><strong>Make the implicit explicit.</strong> If a comment is public, say so. If €1000 is a placeholder, signal it.</li>
+      <li><strong>Be consistent.</strong> One verb style, one casing convention, one date format, one currency format.</li>
+    </ol>
+  </section>
+
+  <!-- ============ DASHBOARD ============ -->
+  <section id="dashboard">
+    <h2>1. Dashboard</h2>
+    <p class="context-line">The first screen every user sees after login. High traffic; sets the tone for everything else.</p>
+
+    <div class="compare">
+      <div class="col-before">
+        <h3>Before</h3>
+        <div class="mockup">
+          <div class="mock-greeting">Welcome to TCG PowerTools, iamwillian.magalhaes@gmail.com!</div>
+          <div class="mock-stats">
+            <div class="mock-stat"><span class="big">0,00€</span>total stock value</div>
+            <div class="mock-stat"><span class="big">0</span>unique articles<br><span class="big">0</span>items</div>
+            <div class="mock-stat">Plan<span class="big">Full - Trial</span>Renewal date<br>19. 5. 2026</div>
+          </div>
+          <div class="mock-section-heading">With Powertools you can…</div>
+          <div class="mock-card">
+            <div class="mock-card-title">Add new articles</div>
+            <div class="mock-card-body">Choose between three way to import your articles, edit them and upload all on cardmarket. Let's start!</div>
+          </div>
+          <div class="mock-card">
+            <div class="mock-card-title">Import a file</div>
+            <div class="mock-card-body">Do you have a .csv, .xlsx or other file with the list of the articles to add? Click here and add all them in few step!</div>
+          </div>
+          <div class="mock-card">
+            <div class="mock-card-title">Price my stock</div>
+            <div class="mock-card-body">List your competitor, build marketing strategies, choose the best and publish your card on cardmarket.</div>
+          </div>
+          <div class="mock-card">
+            <div class="mock-card-title">The Pricing Bot</div>
+            <div class="mock-card-body">Create a pricing program and have your inventory priced automatically every night!</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-after">
+        <h3>After</h3>
+        <div class="mockup">
+          <div class="mock-greeting">Welcome back, Willian.</div>
+          <div class="mock-stats">
+            <div class="mock-stat">Stock value<span class="big">€0.00</span></div>
+            <div class="mock-stat">Articles<span class="big">0</span>Copies<br><span class="big">0</span></div>
+            <div class="mock-stat">Full plan — Trial<span class="big">Expires 19 May 2026</span></div>
+          </div>
+          <div class="mock-section-heading">Get started</div>
+          <div class="mock-card">
+            <div class="mock-card-title">Add cards</div>
+            <div class="mock-card-body">Build your inventory by hand or in bulk. Four modes to choose from.</div>
+          </div>
+          <div class="mock-card">
+            <div class="mock-card-title">Import a CSV</div>
+            <div class="mock-card-body">Already have your inventory in a spreadsheet? Drop it in.</div>
+          </div>
+          <div class="mock-card">
+            <div class="mock-card-title">Price your stock</div>
+            <div class="mock-card-body">See competitor prices across your channels and update your listings.</div>
+          </div>
+          <div class="mock-card">
+            <div class="mock-card-title">Pricing Bot</div>
+            <div class="mock-card-body">Set repricing rules once, then let PowerTools update your inventory every night.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="changes">
+      <h4>What changed and why</h4>
+      <ol class="changes-list">
+        <li><strong>Greeting uses a first name, not an email.</strong> <em>"Welcome to TCG PowerTools, iamwillian.magalhaes@gmail.com!"</em> reads like a system log; a name reads like a greeting. Falls back to "Welcome back" when no first name is on file.</li>
+        <li><strong>"Articles / Copies" replaces "unique articles / items".</strong> The article-and-copies model is foundational to using PowerTools, but the dashboard uses two different terms ("articles", "items") to describe it. Adopting the same word here that the rest of the product uses removes a small but frequent moment of confusion.</li>
+        <li><strong>Currency format unified to "€0.00".</strong> Symbol before the number, two decimals, period separator — aligns with Cardmarket's display convention, which most users already know.</li>
+        <li><strong>"Renewal date" → "Trial expires".</strong> On a trial, the date is when access ends. "Renewal" implies an automatic continuation, which is a different commercial promise.</li>
+        <li><strong>"With Powertools you can…" → "Get started".</strong> The section is the dashboard's primary call to action, not a feature list. A short directive heading frames it correctly.</li>
+        <li><strong>Card descriptions tightened and corrected.</strong> The originals contain a few small grammar issues ("three way", "in few step", "List your competitor") and reference only Cardmarket although the platform also integrates with Cardtrader and Shopify. Each description was rewritten to lead with the verb, name the trigger, and stop.</li>
+        <li><strong>"Let's start!" removed.</strong> The audience profile describes users as goal-oriented; cheerleading reads as friction rather than warmth.</li>
+        <li><strong>"three way" → "Four modes".</strong> The Add Singles screen actually offers four modes (Single Card, By Expansion, Bulk, Import a File). Worth correcting on the dashboard so expectations match reality.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ SINGLE CARD MODE ============ -->
+  <section id="single-card">
+    <h2>2. Single Card Mode</h2>
+    <p class="context-line">The first add-card flow most new users will try. A small form, but every field shapes what arrives in the inventory.</p>
+
+    <div class="compare">
+      <div class="col-before">
+        <h3>Before</h3>
+        <div class="mockup">
+          <div class="mock-form-title">SINGLE CARD MODE</div>
+          <div class="mock-field">
+            <span class="mock-label">Card Name</span>
+            <div class="mock-input placeholder">Try: zen 001, jace wwk, ust plains, 031 jace, rabble m15</div>
+          </div>
+          <div class="mock-field">
+            <span class="mock-label">Search Language</span>
+            <div class="mock-input">🇬🇧 English</div>
+          </div>
+          <div class="mock-field">
+            <span class="mock-label">Search all Expansions</span>
+            <div class="mock-input placeholder">—</div>
+          </div>
+          <div class="mock-section-label">Default values</div>
+          <div class="mock-field"><span class="mock-label">Quantity</span><div class="mock-input">1</div></div>
+          <div class="mock-field"><span class="mock-label">Sell price</span><div class="mock-input">1000</div></div>
+          <div class="mock-field"><span class="mock-label">Condition</span><div class="mock-input">NM</div></div>
+          <div class="mock-field"><span class="mock-label">Language</span><div class="mock-input">English</div></div>
+          <div class="mock-field"><span class="mock-label">Finish type</span><div class="mock-input">Regular</div></div>
+          <div class="mock-field"><span class="mock-label">Signed</span><div class="mock-input">○</div></div>
+          <div class="mock-field"><span class="mock-label">Location</span><div class="mock-input placeholder">—</div></div>
+          <div class="mock-field"><span class="mock-label">Comment</span><div class="mock-input placeholder">—</div></div>
+        </div>
+      </div>
+
+      <div class="col-after">
+        <h3>After</h3>
+        <div class="mockup">
+          <div class="mock-form-title">Single Card Mode</div>
+          <div class="mock-field">
+            <span class="mock-label">Card name</span>
+            <div class="mock-input placeholder">Start typing — e.g. Black Lotus</div>
+            <div class="mock-helper">Tip: set code + collector number works too, like <em>LEA 232</em>.</div>
+          </div>
+          <div class="mock-field">
+            <span class="mock-label">Language</span>
+            <div class="mock-input">🇬🇧 English</div>
+          </div>
+          <div class="mock-field">
+            <span class="mock-label">Expansion (optional)</span>
+            <div class="mock-input placeholder">All expansions</div>
+          </div>
+          <div class="mock-section-label">Default values for added cards</div>
+          <div class="mock-field"><span class="mock-label">Quantity</span><div class="mock-input">1</div></div>
+          <div class="mock-field"><span class="mock-label">Sell price (€)</span><div class="mock-input placeholder">0.00</div></div>
+          <div class="mock-field"><span class="mock-label">Condition</span><div class="mock-input">Near Mint (NM)</div></div>
+          <div class="mock-field"><span class="mock-label">Language</span><div class="mock-input">English</div></div>
+          <div class="mock-field"><span class="mock-label">Finish</span><div class="mock-input">Non-foil</div></div>
+          <div class="mock-field"><span class="mock-label">Signed?</span><div class="mock-input">○</div></div>
+          <div class="mock-field"><span class="mock-label">Location (private)</span><div class="mock-input placeholder">e.g. Shelf B, binder 2</div></div>
+          <div class="mock-field">
+            <span class="mock-label">Public note</span>
+            <div class="mock-input placeholder">Shown on Cardmarket, Cardtrader, and Shopify</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="changes">
+      <h4>What changed and why</h4>
+      <ol class="changes-list">
+        <li><strong>"SINGLE CARD MODE" → sentence case.</strong> All-caps headings read as shouting and break the visual hierarchy of the rest of the app, which uses sentence case elsewhere.</li>
+        <li><strong>Placeholder example uses a recognizable card name.</strong> <em>"zen 001, jace wwk, ust plains"</em> is power-user shorthand for set codes and abbreviated card names — opaque to someone in their first session. A familiar example (<em>Black Lotus</em>) shows the obvious case; a helper line below preserves the shorthand discoverability for power users.</li>
+        <li><strong>"Search Language" → "Language".</strong> The verb "Search" implies the field performs a search; it's actually a filter for the autocomplete dropdown below. Dropping the verb removes the false expectation.</li>
+        <li><strong>"Search all Expansions" → "Expansion (optional)" with placeholder "All expansions".</strong> Same reason. The label now describes the field's purpose; "(optional)" signals the field can be skipped, which it can be.</li>
+        <li><strong>"Default values" → "Default values for added cards".</strong> Originally ambiguous — does "default" mean for the current card, or for every card in the session? Spelling it out resolves the question without a tooltip.</li>
+        <li><strong>"Sell price 1000" → "Sell price (€)" with placeholder "0.00".</strong> The current default of <em>1000</em> with no currency symbol is alarming on first encounter (is that €10? €1,000?). Showing the symbol next to the field and using an empty placeholder makes the unit unambiguous and removes the "is this a real number?" hesitation.</li>
+        <li><strong>"NM" expanded to "Near Mint (NM)" on first display.</strong> NM, EX, GD, LP are universal in the TCG world — but not for the hobbyist user the audience profile describes. Showing the full term on the default reduces the cognitive lookup; the dropdown options can stay abbreviated.</li>
+        <li><strong>"Finish type Regular" → "Finish: Non-foil".</strong> "Finish type" is redundant ("type" adds no information); "Regular" is internal-speak for what TCG sellers universally call "non-foil".</li>
+        <li><strong>"Signed" → "Signed?".</strong> Question mark signals a yes/no toggle, matching how it's actually used.</li>
+        <li><strong>"Location" → "Location (private)".</strong> Pairs with the change to Comment below — makes the public/private status of each field unambiguous.</li>
+        <li><strong>"Comment" → "Public note" with subtext "Shown on Cardmarket, Cardtrader, and Shopify".</strong> This is the most consequential change in the audit. Today, nothing on this screen tells the user that what they type here gets published. Mistakes here are visible to real buyers. Naming the field and labelling its destination removes the trapdoor.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ BY EXPANSION WORKSPACE ============ -->
+  <section id="workspace">
+    <h2>3. By Expansion — workspace</h2>
+    <p class="context-line">The screen users see while staging cards before saving. The toolbar and stats line are scanned constantly during a session.</p>
+
+    <div class="compare">
+      <div class="col-before">
+        <h3>Before</h3>
+        <div class="mockup">
+          <div class="mock-tab">Tab 1 — Singles: 740 | Acc.: 0</div>
+          <div class="mock-toolbar">
+            <span class="mock-tool">Select All</span>
+            <span class="mock-tool">Select None</span>
+            <span class="mock-tool">Export Selected</span>
+            <span class="mock-tool">Discard Changes</span>
+            <span class="mock-tool">Delete</span>
+            <span class="mock-tool">Set Price</span>
+            <span class="mock-tool">Set Condition</span>
+            <span class="mock-tool">Set Location</span>
+            <span class="mock-tool">Set Comment</span>
+            <span class="mock-tool">Autoprice stock</span>
+            <span class="mock-tool">Move Items</span>
+            <span class="mock-tool save">SAVE</span>
+          </div>
+          <div class="mock-stats-line">740 UNIQUE ARTICLES &nbsp; 740 cards(stock - sold) &nbsp; 740000€ Cards Value(stock - sold) &nbsp; 0 selected</div>
+          <div class="mock-section-label">Sort expansion by</div>
+          <div class="mock-input">By rarity and by cn</div>
+          <br>
+          <div class="mock-card-tile">
+            <div class="name">Totally Lost</div>
+            <div class="meta">#54 · GTC · Gatecrash</div>
+            <div>
+              <span class="badge gd">GD</span>🇬🇧
+              <span class="icon-stub star">★</span>
+              <span class="icon-stub alt">A</span>
+              <span style="float:right;font-weight:600;">1000€ · 1x</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-after">
+        <h3>After</h3>
+        <div class="mockup">
+          <div class="mock-tab">Tab 1 — 740 singles, 0 accessories</div>
+          <div class="mock-toolbar">
+            <span class="mock-tool">Select all</span>
+            <span class="mock-tool">Select none</span>
+            <span class="mock-tool">Export</span>
+            <span class="mock-tool">Discard</span>
+            <span class="mock-tool">Delete</span>
+            <span class="mock-tool">Set price</span>
+            <span class="mock-tool">Set condition</span>
+            <span class="mock-tool">Set location</span>
+            <span class="mock-tool">Set note</span>
+            <span class="mock-tool">Auto-price</span>
+            <span class="mock-tool">Move</span>
+            <span class="mock-tool save">Save</span>
+          </div>
+          <div class="mock-stats-line">740 articles &nbsp;·&nbsp; 740 copies in stock &nbsp;·&nbsp; €740,000.00 total value &nbsp;·&nbsp; 0 selected</div>
+          <div class="mock-section-label">Sort by</div>
+          <div class="mock-input">Rarity, then collector number</div>
+          <br>
+          <div class="mock-card-tile">
+            <div class="name">Totally Lost</div>
+            <div class="meta">#54 · GTC · Gatecrash</div>
+            <div>
+              <span class="badge gd">GD</span>🇬🇧
+              <span class="icon-stub star" title="Foil">★</span>
+              <span class="icon-stub alt" title="Alt art">A</span>
+              <span style="float:right;font-weight:600;">€1,000.00 · 1 copy</span>
+            </div>
+            <div class="mock-helper">Hover icons for descriptions.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="changes">
+      <h4>What changed and why</h4>
+      <ol class="changes-list">
+        <li><strong>"740 cards(stock - sold)" → "740 copies in stock".</strong> The original exposes the formula being calculated under the hood. The label should describe the result, not the calculation. Same change applied to "Cards Value(stock - sold)".</li>
+        <li><strong>"740000€" → "€740,000.00".</strong> Thousands separator, leading symbol, two decimals — standard accounting format. Easier to scan, easier to trust.</li>
+        <li><strong>"UNIQUE ARTICLES" → "articles".</strong> Sentence case throughout. "Unique" is redundant — articles are by definition unique (the article model collapses duplicates).</li>
+        <li><strong>Tab label: "Acc.: 0" → "0 accessories".</strong> A four-letter abbreviation saves four characters and costs comprehension. The label now reads as English on first glance.</li>
+        <li><strong>Toolbar casing made consistent.</strong> Originals mix title case ("Select All", "Export Selected") with sentence case ("Move Items"). Standardizing on sentence case is one fewer style inconsistency for designers and translators to manage.</li>
+        <li><strong>Toolbar verbs shortened where possible.</strong> "Export Selected" → "Export", "Discard Changes" → "Discard", "Move Items" → "Move". Context (selection, workspace) makes the object obvious; redundancy is removed.</li>
+        <li><strong>"Set Comment" → "Set note".</strong> Pairs with the rename to "Public note" on the form screen — keeps terminology consistent across the surface.</li>
+        <li><strong>"Autoprice stock" → "Auto-price".</strong> The hyphen makes the verb readable at a glance; "stock" was redundant in the workspace context.</li>
+        <li><strong>"SAVE" → "Save".</strong> All-caps in the primary CTA reads as shouting in an otherwise calm UI. Bold + primary color carry the emphasis fine on their own.</li>
+        <li><strong>Sort dropdown: "By rarity and by cn" → "Rarity, then collector number".</strong> "cn" abbreviates "collector number" but isn't a TCG-world standard. Spelling it out and using a comma + "then" makes the sort sequence read naturally.</li>
+        <li><strong>Card tile icons gain tooltips.</strong> The ★ (foil) and Ⓐ (alt art) badges are currently silent. Tooltips on hover let users decode them without leaving the page.</li>
+        <li><strong>"1x" → "1 copy".</strong> Pairs with the articles/copies clarification elsewhere; reinforces the model rather than working around it.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ BULK ============ -->
+  <section id="bulk">
+    <h2>4. Bulk</h2>
+    <p class="context-line">A powerful mode that's easy to misunderstand on first arrival. The empty state is where most of the work is.</p>
+
+    <div class="compare">
+      <div class="col-before">
+        <h3>Before</h3>
+        <div class="mockup">
+          <div class="mock-form-title">BULK</div>
+          <div class="mock-field">
+            <span class="mock-label">Expansion</span>
+            <div class="mock-input placeholder">—</div>
+          </div>
+          <div class="empty-state">(no further guidance shown)</div>
+          <div class="mock-section-label">Default values</div>
+          <div class="mock-field"><span class="mock-label">Quantity</span><div class="mock-input">1</div></div>
+          <div class="mock-field"><span class="mock-label">Sell price</span><div class="mock-input">1000</div></div>
+          <div class="mock-field"><span class="mock-label">Condition</span><div class="mock-input">NM</div></div>
+          <div class="mock-field"><span class="mock-label">Language</span><div class="mock-input">English</div></div>
+          <div class="mock-field"><span class="mock-label">Finish type</span><div class="mock-input">Regular</div></div>
+          <div class="mock-field"><span class="mock-label">Signed</span><div class="mock-input">○</div></div>
+          <div class="mock-field"><span class="mock-label">Location</span><div class="mock-input placeholder">—</div></div>
+          <div class="mock-field"><span class="mock-label">Comment</span><div class="mock-input placeholder">—</div></div>
+        </div>
+      </div>
+
+      <div class="col-after">
+        <h3>After</h3>
+        <div class="mockup">
+          <div class="mock-form-title">Bulk add</div>
+          <div class="mock-field">
+            <span class="mock-label">Expansion</span>
+            <div class="mock-input placeholder">Pick an expansion to see its rarity breakdown</div>
+          </div>
+          <div class="empty-state">No expansion selected yet — start by picking one above.</div>
+          <div class="mock-section-label">Defaults for the batch</div>
+          <div class="mock-helper" style="margin-bottom:14px;">These apply to every card added. You can edit individual cards after they're staged.</div>
+          <div class="mock-field"><span class="mock-label">Quantity per card</span><div class="mock-input">1</div></div>
+          <div class="mock-field"><span class="mock-label">Sell price (€)</span><div class="mock-input placeholder">0.00</div></div>
+          <div class="mock-field"><span class="mock-label">Condition</span><div class="mock-input">Near Mint (NM)</div></div>
+          <div class="mock-field"><span class="mock-label">Language</span><div class="mock-input">English</div></div>
+          <div class="mock-field"><span class="mock-label">Finish</span><div class="mock-input">Non-foil</div></div>
+          <div class="mock-field"><span class="mock-label">Signed?</span><div class="mock-input">○</div></div>
+          <div class="mock-field"><span class="mock-label">Location (private)</span><div class="mock-input placeholder">e.g. Box 4</div></div>
+          <div class="mock-field"><span class="mock-label">Public note</span><div class="mock-input placeholder">Shown on Cardmarket, Cardtrader, and Shopify</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="changes">
+      <h4>What changed and why</h4>
+      <ol class="changes-list">
+        <li><strong>"BULK" → "Bulk add".</strong> All-caps reads as shouting and doesn't tell the user what the screen does. "Bulk add" pairs the noun with the action, matching the mental model of the other modes ("Single Card Mode" = adding singles, "By Expansion" = adding by expansion).</li>
+        <li><strong>Empty-state guidance added.</strong> A blank Expansion dropdown with no follow-up is the default state on landing. One line of helper text inside the placeholder, and a small empty-state cue below, removes the "what now?" pause.</li>
+        <li><strong>"Default values" → "Defaults for the batch" with a one-line explainer.</strong> Bulk can add hundreds of cards at once. Making clear that the defaults are editable per-card afterward reduces fear of getting them wrong on the first try.</li>
+        <li><strong>"Quantity" → "Quantity per card".</strong> In Single Card Mode "Quantity" refers to a single card. In Bulk, it applies to each card in the batch — so 1 means "one of every rare", not "one rare total". Naming the unit prevents the off-by-everything error.</li>
+        <li><strong>All other field rewrites carry over from Single Card Mode.</strong> Same audience, same form pattern — consistency across the four add-card modes is itself a UX writing improvement.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ THEMES ============ -->
+  <section id="themes">
+    <h2>Recurring themes</h2>
+    <p>Four patterns showed up across most of the screens reviewed. Addressing them at the design-system level would carry the wins forward into future screens automatically.</p>
+    <ol class="changes-list">
+      <li><strong>Internal language leaks through to the surface.</strong> <em>"unique articles"</em>, <em>"cards(stock - sold)"</em>, <em>"Acc."</em>, <em>"pricing program"</em> — these are useful terms inside the team but cost users a moment of decoding every time they appear. A glossary of preferred user-facing terms (with their internal counterparts) would make this almost self-policing.</li>
+      <li><strong>Grammar and pluralisation are uneven.</strong> <em>"three way"</em>, <em>"in few step"</em>, <em>"List your competitor"</em> are individually minor but cumulatively give the impression of a draft rather than a finished product. A pass with a native-English reviewer (or copy-editing tool integrated into the PR flow) would catch most of them.</li>
+      <li><strong>Public vs. private isn't always clear.</strong> Most importantly on the Comment field, which broadcasts to Cardmarket, Cardtrader, and Shopify but doesn't say so. Adopting a labelling convention ("(private)", "Public note") across every freeform field would resolve this systematically.</li>
+      <li><strong>Casing, dates, and currency drift.</strong> Mixed sentence case and title case in toolbars, all-caps headers ("BULK", "SINGLE CARD MODE", "SAVE"), two different date formats, currency with no thousands separator. Codifying these in a style guide is a quick win.</li>
+    </ol>
+  </section>
+
+  <!-- ============ SCOPE ============ -->
+  <section id="scope">
+    <h2>What I deliberately didn't touch</h2>
+    <p>This audit is scoped to UX writing and content design. A few related areas weren't reviewed, on purpose:</p>
+    <ul>
+      <li><strong>Visual design and layout</strong> — typography, color, spacing. The existing system reads cleanly and isn't the bottleneck.</li>
+      <li><strong>Information architecture</strong> — what lives in the side nav, how features are grouped. A different specialty, and one that would benefit from product and analytics input.</li>
+      <li><strong>Localization</strong> — the audit assumes English. If PowerTools is moving toward a multilingual experience, a localization review is its own engagement.</li>
+      <li><strong>Feature suggestions</strong> — no new fields, no new flows. The brief was about communicating what's already there more clearly.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>Audit prepared as a supplementary deliverable to the "Adding cards to your inventory" video and help-center article. Happy to go deeper on any single screen, or extend the same lens to other parts of the product.</p>
+  </footer>
+</article>
+</body>
+</html>

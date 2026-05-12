@@ -1,0 +1,11 @@
+# macOS
+.DS_Store
+
+# Local working artifacts — not for the public repo
+*.mp4
+*.mp4.cursor.json
+*.screenstudio/
+Projects/
+
+# Client-provided brief (not appropriate for a public repo)
+Mini test for candidates-*.pdf

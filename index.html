@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCG PowerTools — freelance submission · Willian Magalhães</title>
+<meta name="description" content="Freelance submission for the TCG PowerTools content producer role — tutorial deliverable plus a UX writing audit.">
+<style>
+  :root {
+    --text: #1a1a1a;
+    --text-muted: #555;
+    --text-soft: #777;
+    --accent: #4338ca;
+    --accent-soft: #eef2ff;
+    --bonus: #15803d;
+    --bonus-soft: #ecfdf5;
+    --border: #e5e5e5;
+    --bg-soft: #fafafa;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--text);
+    line-height: 1.6;
+    margin: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(67, 56, 202, 0.08), transparent 60%),
+      #fff;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex-direction: column;
+  }
+  main {
+    flex: 1;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 80px 24px 48px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .kicker {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 600;
+    margin: 0 0 16px;
+  }
+  h1 {
+    font-size: clamp(32px, 5vw, 44px);
+    line-height: 1.15;
+    margin: 0 0 18px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    max-width: 720px;
+  }
+  .lede {
+    font-size: 19px;
+    color: var(--text-muted);
+    margin: 0 0 56px;
+    max-width: 640px;
+  }
+  .choices {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+    margin-bottom: 48px;
+  }
+  .choice {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 28px 24px;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .choice::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--accent);
+    opacity: 0.9;
+  }
+  .choice.bonus::before { background: var(--bonus); }
+  .choice:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px -8px rgba(67, 56, 202, 0.18);
+    border-color: var(--accent);
+  }
+  .choice.bonus:hover {
+    box-shadow: 0 12px 32px -8px rgba(21, 128, 61, 0.18);
+    border-color: var(--bonus);
+  }
+  .choice-tag {
+    display: inline-block;
+    align-self: flex-start;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+  }
+  .choice.bonus .choice-tag {
+    color: var(--bonus);
+    background: var(--bonus-soft);
+  }
+  .choice h2 {
+    font-size: 22px;
+    margin: 0 0 10px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .choice p {
+    color: var(--text-muted);
+    margin: 0 0 18px;
+    font-size: 15px;
+  }
+  .choice-meta {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 22px;
+    font-size: 14px;
+    color: var(--text-muted);
+    flex: 1;
+  }
+  .choice-meta li {
+    padding: 6px 0 6px 18px;
+    position: relative;
+    line-height: 1.45;
+  }
+  .choice-meta li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 13px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.6;
+  }
+  .choice.bonus .choice-meta li::before { background: var(--bonus); }
+  .choice-arrow {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent);
+    align-self: flex-start;
+    transition: gap 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .choice.bonus .choice-arrow { color: var(--bonus); }
+  .choice:hover .choice-arrow { gap: 10px; }
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+  .meta-row strong { color: var(--text); font-weight: 600; }
+  .meta-row a { color: var(--accent); text-decoration: none; border-bottom: 1px dotted var(--accent); }
+  .meta-row a:hover { border-bottom-style: solid; }
+  footer {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 24px 40px;
+    width: 100%;
+    color: var(--text-soft);
+    font-size: 13px;
+  }
+  @media (max-width: 600px) {
+    main { padding: 48px 20px 32px; }
+    .lede { margin-bottom: 40px; }
+    .choice { padding: 24px 22px 20px; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <p class="kicker">Freelance submission · May 2026</p>
+  <h1>TCG PowerTools — content producer test</h1>
+  <p class="lede">Two deliverables: the assigned tutorial task, plus a bonus UX writing audit. Pick a view below.</p>
+
+  <div class="choices">
+    <a class="choice" href="guide.html" aria-label="View the tutorial deliverable">
+      <span class="choice-tag">Assigned task</span>
+      <h2>Tutorial — How to add cards</h2>
+      <p>A 1-minute YouTube walkthrough and a step-by-step companion guide covering the four ways to add cards in PowerTools.</p>
+      <ul class="choice-meta">
+        <li>60-second tutorial video, native English voiceover</li>
+        <li>Companion webpage with annotated screenshots</li>
+        <li>YouTube upload-ready: title, description, tags, thumbnail concept</li>
+      </ul>
+      <span class="choice-arrow">View deliverable →</span>
+    </a>
+
+    <a class="choice bonus" href="ux-audit.html" aria-label="View the UX writing audit">
+      <span class="choice-tag">Bonus deliverable</span>
+      <h2>UX Writing audit</h2>
+      <p>An audit of four high-traffic screens with side-by-side before/after copy mockups and rationale grounded in the team's own audience profile.</p>
+      <ul class="choice-meta">
+        <li>Four screens reviewed: dashboard, single card, workspace, bulk</li>
+        <li>Before/after wireframes per screen</li>
+        <li>Recurring themes and design-system recommendations</li>
+      </ul>
+      <span class="choice-arrow">View audit →</span>
+    </a>
+  </div>
+
+  <div class="meta-row">
+    <div><strong>Video</strong> · <a href="https://youtu.be/Jv52ZH-PKwc" target="_blank" rel="noopener">YouTube (unlisted)</a></div>
+    <div><strong>Prepared by</strong> · Willian Magalhães</div>
+  </div>
+</main>
+
+<footer>
+  Prepared as a freelance submission. Source available on request.
+</footer>
+</body>
+</html>
