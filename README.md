@@ -16,7 +16,7 @@ A submission for the TCG PowerTools content producer freelance role.
 
 ## Tutorial video
 
-[Watch on YouTube — 1 min, unlisted](https://youtu.be/Jv52ZH-PKwc)
+[Watch on YouTube — 1 min, unlisted](https://youtu.be/qgpGx9bKCSg)
 
 ---
 
